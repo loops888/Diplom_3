@@ -2,9 +2,6 @@ import allure
 from selenium.webdriver import ActionChains
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
-from faker import Faker
-
-faker = Faker()
 
 
 class BasePage:
@@ -18,16 +15,16 @@ class BasePage:
         self.driver.execute_script("return arguments[0].scrollIntoView();", element)
 
     @allure.step('Кликаем по элементу')
-    def click_on_element(self, locator):
-        element = self.find_element_with_waiting(locator)
+    def click_on_element_action(self, locator):
+        element = self.find_element_to_be_clickable(locator)
         self.driver.execute_script("arguments[0].click();", element)
-        element = self.find_element_with_waiting(locator)
+        element = self.find_element_to_be_clickable(locator)
         ActionChains(self.driver).move_to_element(element).click(element).perform()
 
     @allure.step('Кликаем по элементу с доп.ожиданием')
     @allure.description(
         'Добавлен для окна восстановления пароля - по методу выше почему-то только в нем не находятся элементы, но для других окон через click_on_element работает стабильнее.')
-    def click_on_expected_element(self, locator):
+    def click_on_element(self, locator):
         element = self.find_element_with_waiting(locator)
         WebDriverWait(self.driver, 10).until(expected_conditions.element_to_be_clickable(locator))
         element.click()
@@ -35,6 +32,11 @@ class BasePage:
     @allure.step('Ищем элемент с ожиданием.')
     def find_element_with_waiting(self, locator):
         WebDriverWait(self.driver, 10).until(expected_conditions.visibility_of_element_located(locator))
+        return self.driver.find_element(*locator)
+
+    @allure.step('Ищем элемент, пока не станет кликабельным.')
+    def find_element_to_be_clickable(self, locator):
+        WebDriverWait(self.driver, 10).until(expected_conditions.element_to_be_clickable(locator))
         return self.driver.find_element(*locator)
 
     @allure.step('Получаем текст из элемента.')
@@ -60,7 +62,13 @@ class BasePage:
 
     @allure.step('Перетаскиваем элемент.')
     def drag_and_drop_element(self, source_locator, target_locator):
-        source_element = self.find_element_with_waiting(source_locator)
-        target_element = self.find_element_with_waiting(target_locator)
+        source_element = self.find_element_to_be_clickable(source_locator)
+        target_element = self.find_element_to_be_clickable(target_locator)
         action = ActionChains(self.driver)
         action.drag_and_drop(source_element, target_element).perform()
+
+    @allure.step('Ждем изменение текста в элементе.')
+    def wait_for_element_to_change_text(self, locator, text_to_be_changed):
+        WebDriverWait(self.driver, 10).until_not(expected_conditions.text_to_be_present_in_element(
+            locator, text_to_be_changed))
+        return self.driver.find_element(*locator)

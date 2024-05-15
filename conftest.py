@@ -1,33 +1,30 @@
 import requests
-
-from data import *
-
-import pytest
-from selenium import webdriver
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
 
+from helpers import *
+
+import pytest
+from selenium import webdriver
+
 import constants
 from locators.login_page_locators import LoginPageLocators
-from locators.main_page_locators import MainPageLocators
 
 
 @pytest.fixture(scope='function', params=['chrome', 'firefox'])
 def driver(request):
-    global driver
     if 'chrome' in request.param:
         options = webdriver.ChromeOptions()
         options.add_argument("--window-size=1920,1080")
         driver = webdriver.Chrome(options=options)
-        driver.get(constants.Constants.URL)
 
     elif 'firefox' in request.param:
         options = webdriver.FirefoxOptions()
         options.add_argument("--width=1920")
         options.add_argument("--height=1080")
         driver = webdriver.Firefox(options=options)
-        driver.get(constants.Constants.URL)
 
+    driver.get(constants.Constants.URL)
     yield driver
     driver.quit()
 
@@ -41,7 +38,7 @@ def login(driver, generate_user_register_and_delete_by_api):
     driver.find_element(*LoginPageLocators.PASSWORD_FIELD).send_keys(password)
     driver.find_element(*LoginPageLocators.LOGIN_BUTTON).click()
     WebDriverWait(driver, 10).until(expected_conditions.visibility_of_element_located(
-        MainPageLocators.MAIN_PAGE))
+        LoginPageLocators.MAIN_PAGE))
     return driver
 
 

@@ -2,14 +2,8 @@ from selenium.webdriver.common.by import By
 
 
 class MainPageLocators:
-    # Главная страница сайта.
-    MAIN_PAGE = (By.CLASS_NAME, "App_App__aOmNj")
-    # Кнопка с логотипом для выхода на главную страницу.
-    LOGO_BUTTON = (By.XPATH, ".//div[@class = 'AppHeader_header__logo__2D0X2']")
     # Ссылка на вход в "Личный Кабинет".
     PERSONAL_ACCOUNT_LINK = (By.LINK_TEXT, "Личный Кабинет")
-    # Форма для авторизации пользователя.
-    LOGIN_WINDOW = (By.XPATH, "//button[contains(text(),'Войти')]")
     # Кнопка "Конструктор".
     CONSTRUCTOR_BUTTON = (By.LINK_TEXT, "Конструктор")
     # Форма конструктора.
