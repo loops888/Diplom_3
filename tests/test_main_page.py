@@ -1,7 +1,9 @@
 import allure
 import pytest
 
+from constants import Constants
 from pages.main_page import MainPage
+from pages.order_page import OrderPage
 
 
 class TestMainPage:
@@ -19,14 +21,17 @@ class TestMainPage:
         'Проверяем, что отобразилась форма ленты заказов после клика на «Лента заказов».')
     def test_orders_list_visibility(self, driver):
         main_page = MainPage(driver)
-        assert main_page.show_orders_list_form()
+        order_page = OrderPage(driver)
+
+        main_page.go_to_orders_list()
+        assert order_page.show_orders_list_form()
 
     @pytest.mark.parametrize(
         'ingredient, detail',
         [
-            ('Флюоресцентная булка R2-D3', 'Флюоресцентная булка R2-D3'),
-            ('Соус Spicy-X', 'Соус Spicy-X'),
-            ('Мясо бессмертных моллюсков Protostomia', 'Мясо бессмертных моллюсков Protostomia')
+            (Constants.TEST_BURGER, Constants.TEST_BURGER),
+            (Constants.TEST_SAUCE, Constants.TEST_SAUCE),
+            (Constants.TEST_FILLING, Constants.TEST_FILLING)
         ]
     )
     @allure.title('Проверка клика на ингредиент.')
@@ -39,9 +44,9 @@ class TestMainPage:
     @pytest.mark.parametrize(
         'ingredient, detail',
         [
-            ('Флюоресцентная булка R2-D3', 'Флюоресцентная булка R2-D3'),
-            ('Соус Spicy-X', 'Соус Spicy-X'),
-            ('Мясо бессмертных моллюсков Protostomia', 'Мясо бессмертных моллюсков Protostomia')
+            (Constants.TEST_BURGER, Constants.TEST_BURGER),
+            (Constants.TEST_SAUCE, Constants.TEST_SAUCE),
+            (Constants.TEST_FILLING, Constants.TEST_FILLING)
         ]
     )
     @allure.title('Проверка клика по крестику в деталях ингредиента.')
@@ -54,9 +59,9 @@ class TestMainPage:
     @pytest.mark.parametrize(
         'ingredient, count',
         [
-            ('Флюоресцентная булка R2-D3', '2'),
-            ('Соус Spicy-X', '1'),
-            ('Мясо бессмертных моллюсков Protostomia', '1')
+            (Constants.TEST_BURGER, '2'),
+            (Constants.TEST_SAUCE, '1'),
+            (Constants.TEST_FILLING, '1')
         ]
     )
     @allure.title('Проверка увеличения счетчика при добавлении ингредиента.')
@@ -69,9 +74,9 @@ class TestMainPage:
     @pytest.mark.parametrize(
         'ingredient',
         [
-            ('Флюоресцентная булка R2-D3'),
-            ('Соус Spicy-X'),
-            ('Мясо бессмертных моллюсков Protostomia')
+            Constants.TEST_BURGER,
+            Constants.TEST_SAUCE,
+            Constants.TEST_FILLING
         ]
     )
     @allure.title('Проверка оформления заказа.')
@@ -79,4 +84,6 @@ class TestMainPage:
         'Проверяем, что залогиненный пользователь может оформить заказ.')
     def test_authorized_user_confirm_order(self, login, ingredient):
         main_page = MainPage(login)
-        assert main_page.confirm_order(ingredient) == 'Ваш заказ начали готовить'
+
+        main_page.add_ingredients_to_burger(ingredient)
+        assert main_page.confirm_order() == 'Ваш заказ начали готовить'

@@ -26,7 +26,7 @@ class BasePage:
         'Добавлен для окна восстановления пароля - по методу выше почему-то только в нем не находятся элементы, но для других окон через click_on_element работает стабильнее.')
     def click_on_element(self, locator):
         element = self.find_element_with_waiting(locator)
-        WebDriverWait(self.driver, 10).until(expected_conditions.element_to_be_clickable(locator))
+        self.find_element_to_be_clickable(locator)
         element.click()
 
     @allure.step('Ищем элемент с ожиданием.')
@@ -52,7 +52,7 @@ class BasePage:
 
     @allure.step('Заполняем элемент текстом.')
     def insert_text_in_field(self, locator, value):
-        element = WebDriverWait(self.driver, 10).until(expected_conditions.element_to_be_clickable(locator))
+        element = self.find_element_to_be_clickable(locator)
         element.send_keys(value)
 
     @allure.step('Получением значение определенного аттрибута.')

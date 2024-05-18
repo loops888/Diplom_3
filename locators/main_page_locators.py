@@ -2,16 +2,18 @@ from selenium.webdriver.common.by import By
 
 
 class MainPageLocators:
+    # Главная страница сайта.
+    MAIN_PAGE = (By.CLASS_NAME, "App_App__aOmNj")
+    # Кнопка с логотипом (для выхода на главную страницу).
+    LOGO_BUTTON = (By.XPATH, ".//div[@class = 'AppHeader_header__logo__2D0X2']")
     # Ссылка на вход в "Личный Кабинет".
-    PERSONAL_ACCOUNT_LINK = (By.LINK_TEXT, "Личный Кабинет")
+    PERSONAL_ACCOUNT_LINK = (By.XPATH, "//p[contains(text(),'Личный Кабинет')]")
     # Кнопка "Конструктор".
     CONSTRUCTOR_BUTTON = (By.LINK_TEXT, "Конструктор")
     # Форма конструктора.
     CONSTRUCTOR_FORM = (By.XPATH, ".//section[@class = 'BurgerIngredients_ingredients__1N8v2']")
     # Кнопка "Лента заказов".
     ORDERS_LIST_BUTTON = (By.XPATH, "//p[contains(text(),'Лента Заказов')]")
-    # Форма ленты заказов.
-    ORDERS_LIST_FORM = (By.XPATH, ".//ul[@class = 'OrderFeed_list__OLh59']")
     # Кнопка ингредиента из конструктора.
     INGREDIENT_BUTTON = (By.XPATH, ".//p[@class = 'BurgerIngredient_ingredient__text__yp3dH' and text()='{}']")
     # Кнопка ингредиента из конструктора.

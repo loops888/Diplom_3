@@ -1,6 +1,4 @@
 import requests
-from selenium.webdriver.support import expected_conditions
-from selenium.webdriver.support.wait import WebDriverWait
 
 from helpers import *
 
@@ -8,7 +6,8 @@ import pytest
 from selenium import webdriver
 
 import constants
-from locators.login_page_locators import LoginPageLocators
+from pages.login_page import LoginPage
+from pages.main_page import MainPage
 
 
 @pytest.fixture(scope='function', params=['chrome', 'firefox'])
@@ -33,12 +32,15 @@ def driver(request):
 def login(driver, generate_user_register_and_delete_by_api):
     email = generate_user_register_and_delete_by_api[0]
     password = generate_user_register_and_delete_by_api[1]
-    driver.find_element(*LoginPageLocators.PERSONAL_ACCOUNT_LINK).click()
-    driver.find_element(*LoginPageLocators.EMAIL_FIELD).send_keys(email)
-    driver.find_element(*LoginPageLocators.PASSWORD_FIELD).send_keys(password)
-    driver.find_element(*LoginPageLocators.LOGIN_BUTTON).click()
-    WebDriverWait(driver, 10).until(expected_conditions.visibility_of_element_located(
-        LoginPageLocators.MAIN_PAGE))
+
+    main_page = MainPage(driver)
+    login_page = LoginPage(driver)
+
+    main_page.go_to_personal_account()
+    login_page.print_user_email(email)
+    login_page.print_user_password(password)
+    login_page.confirm_user_authorization()
+    main_page.wait_for_main_page()
     return driver
 
 
